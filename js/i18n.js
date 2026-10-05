@@ -1,0 +1,225 @@
+(function (global) {
+  'use strict';
+  var SE = global.SmartEscape = global.SmartEscape || {};
+
+  var DICT = {
+    en: {
+      'app.title': 'Smart Escape',
+      'app.subtitle': 'Interactive evacuation route simulator',
+      'lang.label': 'Language',
+      'import.title': 'Building data',
+      'import.drop': 'Import building.json - click or drop a file here',
+      'import.sample': 'Load sample',
+      'import.loaded': 'Loaded: {name}',
+      'import.fromSample': 'sample',
+      'import.counts': '{nodes} locations, {edges} corridors',
+      'import.failed': 'Import failed.',
+      'import.failedKept': 'Import failed. The previous building was kept.',
+      'start.title': 'Start location',
+      'start.placeholder': 'Choose a room or junction',
+      'start.blockedTag': 'blocked',
+      'mode.title': 'Map click mode',
+      'mode.start': 'Set start',
+      'mode.hazard': 'Toggle hazards',
+      'mode.hintStart': 'Click a room or junction on the map to set the start.',
+      'mode.hintHazard': 'Click a room, junction, corridor or exit to block/close or restore it.',
+      'map.label': 'Building map',
+      'hz.title': 'Hazards',
+      'hz.places': 'Rooms and junctions',
+      'hz.corridors': 'Corridors',
+      'hz.exits': 'Exits',
+      'hz.block': 'Block',
+      'hz.unblock': 'Unblock',
+      'hz.close': 'Close',
+      'hz.reopen': 'Reopen',
+      'hz.stateOk': 'Clear',
+      'hz.stateBlocked': 'Blocked',
+      'hz.stateOpen': 'Open',
+      'hz.stateClosed': 'Closed',
+      'hz.cost': 'cost {cost}',
+      'reset.btn': 'Reset hazards',
+      'reset.hint': 'Restore the original hazards from the imported file',
+      'reset.done': 'Hazards reset to the original file state.',
+      'status.empty': 'Import a building file to begin',
+      'status.noStart': 'Select a start location',
+      'status.noStartHint': 'Pick a room or junction on the map or from the list.',
+      'status.blocked': 'Starting location blocked',
+      'status.blockedHint': 'Unblock it or choose another start location.',
+      'status.noRoute': 'No route available',
+      'status.noRouteHint': 'Every exit is closed or unreachable from here.',
+      'status.ok': 'Route found',
+      'route.cost': 'Total cost',
+      'route.exit': 'Exit',
+      'route.steps': 'Corridors',
+      'route.path': 'Path',
+      'legend.room': 'Room',
+      'legend.junction': 'Junction',
+      'legend.exit': 'Exit',
+      'legend.start': 'Start',
+      'legend.route': 'Route',
+      'legend.blockedNode': 'Blocked place',
+      'legend.closedExit': 'Closed exit',
+      'legend.blockedEdge': 'Blocked corridor',
+      'toast.exitStart': 'An exit cannot be a start location.',
+      'toast.blockedStart': 'A blocked location cannot be chosen as the start.',
+      'toast.imported': 'Imported: {name}',
+      'foot.note': 'Smart Escape is an educational simulation, not a certified real-world evacuation planning tool.',
+      'err.FILE_TOO_BIG': 'The file is too large (max 2 MB).',
+      'err.FILE_EMPTY': 'The file is empty.',
+      'err.FILE_NOT_JSON': 'The file is not valid JSON.',
+      'err.FILE_READ': 'The file could not be read.',
+      'err.NOT_OBJECT': 'The file must contain a JSON object.',
+      'err.BUILDING_NAME': '"building" must be a non-empty name.',
+      'err.NODES_NOT_ARRAY': '"nodes" must be a list.',
+      'err.NODE_COUNT': 'Found {count} nodes; {min} to {max} are allowed.',
+      'err.NODE_NOT_OBJECT': 'Node #{index} is not an object.',
+      'err.NODE_ID': 'Node #{index} has no valid id.',
+      'err.NODE_DUP_ID': 'Duplicate node id "{id}".',
+      'err.NODE_LABEL': 'Node {id} needs a non-empty label.',
+      'err.NODE_TYPE': 'Node {id} has an invalid type "{type}" (use room, junction or exit).',
+      'err.NODE_COORDS': 'Node {id} needs numeric x and y.',
+      'err.NO_EXIT': 'At least one exit node is required.',
+      'err.NO_PLACE': 'At least one room or junction is required.',
+      'err.EDGES_NOT_ARRAY': '"edges" must be a list.',
+      'err.EDGE_COUNT': 'Found {count} edges; {min} to {max} are allowed.',
+      'err.EDGE_NOT_OBJECT': 'Edge #{index} is not an object.',
+      'err.EDGE_ID': 'Edge #{index} has no valid id.',
+      'err.EDGE_DUP_ID': 'Duplicate edge id "{id}".',
+      'err.EDGE_UNKNOWN_NODE': 'Edge {id} refers to an unknown node "{ref}".',
+      'err.EDGE_COST': 'Edge {id} needs a positive integer cost (got "{cost}").',
+      'err.EDGE_SELF_LOOP': 'Edge {id} connects a node to itself.',
+      'err.EDGE_DUP_PAIR': 'Edge {id} repeats the connection {from} - {to}.',
+      'err.INIT_MISSING': '"initial_state" is missing or is not an object.',
+      'err.INIT_FIELD': 'initial_state.{field} must be a list.',
+      'err.INIT_ID_TYPE': 'initial_state.{field} must contain only text ids.',
+      'err.INIT_UNKNOWN_ID': 'initial_state.{field} contains an unknown id "{id}".',
+      'err.INIT_WRONG_CATEGORY': 'initial_state.{field} contains "{id}", which is the wrong kind of item.'
+    },
+    bn: {
+      'app.title': 'স্মার্ট এস্কেপ',
+      'app.subtitle': 'ইন্টারঅ্যাকটিভ সরিয়ে নেওয়ার রুট সিমুলেটর',
+      'lang.label': 'ভাষা',
+      'import.title': 'বিল্ডিং ডেটা',
+      'import.drop': 'building.json আমদানি করুন - ক্লিক করুন বা ফাইল ছেড়ে দিন',
+      'import.sample': 'নমুনা লোড করুন',
+      'import.loaded': 'লোড হয়েছে: {name}',
+      'import.fromSample': 'নমুনা',
+      'import.counts': '{nodes}টি স্থান, {edges}টি করিডোর',
+      'import.failed': 'আমদানি ব্যর্থ হয়েছে।',
+      'import.failedKept': 'আমদানি ব্যর্থ হয়েছে। আগের বিল্ডিংটি রাখা হয়েছে।',
+      'start.title': 'শুরুর স্থান',
+      'start.placeholder': 'একটি রুম বা জংশন বেছে নিন',
+      'start.blockedTag': 'অবরুদ্ধ',
+      'mode.title': 'ম্যাপে ক্লিকের মোড',
+      'mode.start': 'শুরু নির্ধারণ',
+      'mode.hazard': 'বিপদ পরিবর্তন',
+      'mode.hintStart': 'শুরুর স্থান ঠিক করতে ম্যাপে একটি রুম বা জংশনে ক্লিক করুন।',
+      'mode.hintHazard': 'অবরুদ্ধ/বন্ধ বা পুনরুদ্ধার করতে রুম, জংশন, করিডোর বা প্রস্থানে ক্লিক করুন।',
+      'map.label': 'বিল্ডিং ম্যাপ',
+      'hz.title': 'বিপদ ও বাধা',
+      'hz.places': 'রুম ও জংশন',
+      'hz.corridors': 'করিডোর',
+      'hz.exits': 'প্রস্থান পথ',
+      'hz.block': 'অবরুদ্ধ করুন',
+      'hz.unblock': 'খুলে দিন',
+      'hz.close': 'বন্ধ করুন',
+      'hz.reopen': 'আবার খুলুন',
+      'hz.stateOk': 'স্বাভাবিক',
+      'hz.stateBlocked': 'অবরুদ্ধ',
+      'hz.stateOpen': 'খোলা',
+      'hz.stateClosed': 'বন্ধ',
+      'hz.cost': 'খরচ {cost}',
+      'reset.btn': 'বিপদ রিসেট',
+      'reset.hint': 'আমদানি করা ফাইলের মূল বিপদগুলো ফিরিয়ে আনুন',
+      'reset.done': 'বিপদগুলো ফাইলের মূল অবস্থায় ফিরেছে।',
+      'status.empty': 'শুরু করতে একটি বিল্ডিং ফাইল আমদানি করুন',
+      'status.noStart': 'একটি শুরুর স্থান নির্বাচন করুন',
+      'status.noStartHint': 'ম্যাপ বা তালিকা থেকে একটি রুম বা জংশন বেছে নিন।',
+      'status.blocked': 'শুরুর স্থান অবরুদ্ধ',
+      'status.blockedHint': 'এটি খুলে দিন বা অন্য একটি শুরুর স্থান বেছে নিন।',
+      'status.noRoute': 'কোনো রুট পাওয়া যায়নি',
+      'status.noRouteHint': 'এখান থেকে প্রতিটি প্রস্থান বন্ধ অথবা পৌঁছানো অসম্ভব।',
+      'status.ok': 'রুট পাওয়া গেছে',
+      'route.cost': 'মোট খরচ',
+      'route.exit': 'প্রস্থান',
+      'route.steps': 'করিডোর',
+      'route.path': 'পথ',
+      'legend.room': 'রুম',
+      'legend.junction': 'জংশন',
+      'legend.exit': 'প্রস্থান',
+      'legend.start': 'শুরু',
+      'legend.route': 'রুট',
+      'legend.blockedNode': 'অবরুদ্ধ স্থান',
+      'legend.closedExit': 'বন্ধ প্রস্থান',
+      'legend.blockedEdge': 'অবরুদ্ধ করিডোর',
+      'toast.exitStart': 'প্রস্থান পথ শুরুর স্থান হতে পারে না।',
+      'toast.blockedStart': 'অবরুদ্ধ স্থানকে শুরু হিসেবে বেছে নেওয়া যায় না।',
+      'toast.imported': 'আমদানি হয়েছে: {name}',
+      'foot.note': 'স্মার্ট এস্কেপ একটি শিক্ষামূলক সিমুলেশন, বাস্তব জীবনের স্বীকৃত সরিয়ে নেওয়ার পরিকল্পনা টুল নয়।',
+      'err.FILE_TOO_BIG': 'ফাইলটি অনেক বড় (সর্বোচ্চ 2 MB)।',
+      'err.FILE_EMPTY': 'ফাইলটি খালি।',
+      'err.FILE_NOT_JSON': 'ফাইলটি বৈধ JSON নয়।',
+      'err.FILE_READ': 'ফাইলটি পড়া যায়নি।',
+      'err.NOT_OBJECT': 'ফাইলে একটি JSON অবজেক্ট থাকতে হবে।',
+      'err.BUILDING_NAME': '"building" একটি অ-খালি নাম হতে হবে।',
+      'err.NODES_NOT_ARRAY': '"nodes" একটি তালিকা হতে হবে।',
+      'err.NODE_COUNT': '{count}টি নোড পাওয়া গেছে; অনুমোদিত {min} থেকে {max}টি।',
+      'err.NODE_NOT_OBJECT': 'নোড #{index} একটি অবজেক্ট নয়।',
+      'err.NODE_ID': 'নোড #{index}-এর বৈধ id নেই।',
+      'err.NODE_DUP_ID': 'নোড id "{id}" একাধিকবার আছে।',
+      'err.NODE_LABEL': 'নোড {id}-এর একটি অ-খালি label দরকার।',
+      'err.NODE_TYPE': 'নোড {id}-এর type "{type}" বৈধ নয় (room, junction বা exit দিন)।',
+      'err.NODE_COORDS': 'নোড {id}-এর সংখ্যাসূচক x ও y দরকার।',
+      'err.NO_EXIT': 'কমপক্ষে একটি exit নোড দরকার।',
+      'err.NO_PLACE': 'কমপক্ষে একটি room বা junction দরকার।',
+      'err.EDGES_NOT_ARRAY': '"edges" একটি তালিকা হতে হবে।',
+      'err.EDGE_COUNT': '{count}টি এজ পাওয়া গেছে; অনুমোদিত {min} থেকে {max}টি।',
+      'err.EDGE_NOT_OBJECT': 'এজ #{index} একটি অবজেক্ট নয়।',
+      'err.EDGE_ID': 'এজ #{index}-এর বৈধ id নেই।',
+      'err.EDGE_DUP_ID': 'এজ id "{id}" একাধিকবার আছে।',
+      'err.EDGE_UNKNOWN_NODE': 'এজ {id} একটি অজানা নোড "{ref}" উল্লেখ করেছে।',
+      'err.EDGE_COST': 'এজ {id}-এর খরচ ধনাত্মক পূর্ণসংখ্যা হতে হবে ("{cost}" পাওয়া গেছে)।',
+      'err.EDGE_SELF_LOOP': 'এজ {id} একটি নোডকে নিজের সাথেই যুক্ত করেছে।',
+      'err.EDGE_DUP_PAIR': 'এজ {id} সংযোগ {from} - {to} পুনরাবৃত্তি করেছে।',
+      'err.INIT_MISSING': '"initial_state" নেই অথবা এটি অবজেক্ট নয়।',
+      'err.INIT_FIELD': 'initial_state.{field} একটি তালিকা হতে হবে।',
+      'err.INIT_ID_TYPE': 'initial_state.{field}-এ শুধু টেক্সট id থাকতে হবে।',
+      'err.INIT_UNKNOWN_ID': 'initial_state.{field}-এ অজানা id "{id}" আছে।',
+      'err.INIT_WRONG_CATEGORY': 'initial_state.{field}-এ "{id}" আছে, যা ভুল ধরনের আইটেম।'
+    }
+  };
+
+  var lang = 'en';
+
+  function t(key, params) {
+    var s = DICT[lang] ? DICT[lang][key] : undefined;
+    if (s === undefined) s = DICT.en[key];
+    if (s === undefined) s = key;
+    if (params) {
+      Object.keys(params).forEach(function (k) {
+        s = s.split('{' + k + '}').join(String(params[k]));
+      });
+    }
+    return s;
+  }
+
+  function applyStaticText(root) {
+    root = root || document;
+    root.querySelectorAll('[data-i18n]').forEach(function (n) {
+      n.textContent = t(n.getAttribute('data-i18n'));
+    });
+    root.querySelectorAll('[data-i18n-title]').forEach(function (n) {
+      n.setAttribute('title', t(n.getAttribute('data-i18n-title')));
+    });
+    root.querySelectorAll('[data-i18n-aria]').forEach(function (n) {
+      n.setAttribute('aria-label', t(n.getAttribute('data-i18n-aria')));
+    });
+    document.title = t('app.title') + ' - ' + t('app.subtitle');
+  }
+
+  SE.t = t;
+  SE.setLang = function (l) { if (DICT[l]) lang = l; };
+  SE.getLang = function () { return lang; };
+  SE.errorText = function (err) { return t('err.' + err.code, err.params || {}); };
+  SE.applyStaticText = applyStaticText;
+})(window);

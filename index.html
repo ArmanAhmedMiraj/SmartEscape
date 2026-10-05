@@ -7,10 +7,104 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <main class="boot">
-    <h1>Smart Escape</h1>
-    <p id="boot-status">Loading…</p>
-  </main>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h12M11 6l6 6-6 6"/><path d="M20 4v16"/></svg>
+      </div>
+      <div>
+        <h1 data-i18n="app.title">Smart Escape</h1>
+        <p class="sub" data-i18n="app.subtitle">Interactive evacuation route simulator</p>
+      </div>
+    </div>
+    <div class="seg" role="group" data-i18n-aria="lang.label" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="bn" aria-pressed="false">বাংলা</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="side">
+      <section class="card">
+        <h2 data-i18n="import.title">Building data</h2>
+        <button id="drop" class="drop" type="button">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg>
+          <span data-i18n="import.drop">Import building.json</span>
+        </button>
+        <input id="file" type="file" accept=".json,application/json" hidden />
+        <div class="row"><button id="btn-sample" class="btn ghost" type="button" data-i18n="import.sample">Load sample</button></div>
+        <p id="import-info" class="muted small" dir="auto"></p>
+        <div id="import-errors" class="errors" role="alert" hidden>
+          <p id="error-head" class="err-head"></p>
+          <ul id="error-list"></ul>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 data-i18n="start.title">Start location</h2>
+        <label class="sr-only" for="start-select" data-i18n="start.title">Start location</label>
+        <select id="start-select"></select>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2 data-i18n="hz.title">Hazards</h2>
+          <button id="btn-reset" class="btn small" type="button" data-i18n="reset.btn" data-i18n-title="reset.hint">Reset hazards</button>
+        </div>
+        <div id="hz-lists" class="hz-lists"></div>
+      </section>
+    </aside>
+
+    <main class="main">
+      <section id="status-card" class="card result st-idle" aria-live="polite">
+        <div class="result-head">
+          <span class="dot" aria-hidden="true"></span>
+          <h2 id="status-title"></h2>
+        </div>
+        <p id="status-hint" class="muted" hidden></p>
+        <div id="route-details" hidden>
+          <div class="stats">
+            <div class="stat"><span class="k" data-i18n="route.cost">Total cost</span><span class="v" id="route-cost"></span></div>
+            <div class="stat"><span class="k" data-i18n="route.exit">Exit</span><span class="v small-v" id="route-exit" dir="auto"></span></div>
+            <div class="stat"><span class="k" data-i18n="route.steps">Corridors</span><span class="v" id="route-steps"></span></div>
+          </div>
+          <div id="route-chips" class="chips"></div>
+          <p class="path-line"><span class="k" data-i18n="route.path">Path</span>: <span id="route-path"></span></p>
+        </div>
+      </section>
+
+      <section class="card map-card">
+        <div class="card-head">
+          <h2 id="building-name" dir="auto"></h2>
+          <div class="seg" role="group" data-i18n-aria="mode.title" aria-label="Map click mode">
+            <button type="button" data-mode="start" aria-pressed="true" data-i18n="mode.start">Set start</button>
+            <button type="button" data-mode="hazard" aria-pressed="false" data-i18n="mode.hazard">Toggle hazards</button>
+          </div>
+        </div>
+        <p id="mode-hint" class="muted small"></p>
+        <div id="map" class="map"></div>
+        <ul class="legend">
+          <li><i class="sw sw-room"></i><span data-i18n="legend.room">Room</span></li>
+          <li><i class="sw sw-junction"></i><span data-i18n="legend.junction">Junction</span></li>
+          <li><i class="sw sw-exit"></i><span data-i18n="legend.exit">Exit</span></li>
+          <li><i class="sw sw-start"></i><span data-i18n="legend.start">Start</span></li>
+          <li><i class="sw sw-route"></i><span data-i18n="legend.route">Route</span></li>
+          <li><i class="sw sw-blocked"></i><span data-i18n="legend.blockedNode">Blocked place</span></li>
+          <li><i class="sw sw-closed"></i><span data-i18n="legend.closedExit">Closed exit</span></li>
+          <li><i class="sw sw-edge"></i><span data-i18n="legend.blockedEdge">Blocked corridor</span></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer class="foot" data-i18n="foot.note">Smart Escape is an educational simulation, not a certified real-world evacuation planning tool.</footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/validate.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/sample.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/render.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
