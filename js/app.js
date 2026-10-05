@@ -1,0 +1,1 @@
+document.getElementById("boot-status").textContent = "App loaded ✔";
