@@ -4,14 +4,37 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Smart Escape</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@500&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/campus.css" />
   <link rel="stylesheet" href="css/extras.css" />
 </head>
 <body>
   <header class="topbar">
     <div class="brand">
-      <div class="logo" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h12M11 6l6 6-6 6"/><path d="M20 4v16"/></svg>
+      <div class="flower-wrap" aria-hidden="true">
+        <div class="flower">
+          <i class="petal" style="--a:0deg;--z:0px"></i>
+          <i class="petal" style="--a:60deg;--z:0px"></i>
+          <i class="petal" style="--a:120deg;--z:0px"></i>
+          <i class="petal" style="--a:180deg;--z:0px"></i>
+          <i class="petal" style="--a:240deg;--z:0px"></i>
+          <i class="petal" style="--a:300deg;--z:0px"></i>
+          <i class="petal" style="--a:30deg;--z:3px"></i>
+          <i class="petal" style="--a:90deg;--z:3px"></i>
+          <i class="petal" style="--a:150deg;--z:3px"></i>
+          <i class="petal" style="--a:210deg;--z:3px"></i>
+          <i class="petal" style="--a:270deg;--z:3px"></i>
+          <i class="petal" style="--a:330deg;--z:3px"></i>
+          <i class="ring" style="--i:0"></i>
+          <i class="ring" style="--i:1"></i>
+          <i class="ring" style="--i:2"></i>
+          <i class="ring" style="--i:3"></i>
+          <i class="ring" style="--i:4"></i>
+          <i class="ring" style="--i:5"></i>
+        </div>
       </div>
       <div>
         <h1 data-i18n="app.title">Smart Escape</h1>
@@ -23,6 +46,59 @@
       <button type="button" data-lang="bn" aria-pressed="false">বাংলা</button>
     </div>
   </header>
+
+  <section class="sponsors" data-i18n-aria="sp.label" aria-label="Event partners">
+    <div class="host">
+      <svg class="campus" viewBox="0 0 152 90" aria-hidden="true">
+        <ellipse class="base" cx="76" cy="78" rx="76" ry="9" />
+        <g style="--c: var(--blue); --cd: var(--blue-d)">
+          <polygon class="l" points="6,42 22,50 22,80 6,72" />
+          <polygon class="r" points="22,50 38,42 38,72 22,80" />
+          <polygon class="t" points="22,34 38,42 22,50 6,42" />
+        </g>
+        <g style="--c: var(--go); --cd: var(--go-d)">
+          <polygon class="l" points="42,22 58,30 58,80 42,72" />
+          <polygon class="r" points="58,30 74,22 74,72 58,80" />
+          <polygon class="t" points="58,14 74,22 58,30 42,22" />
+          <line class="pole" x1="58" y1="22" x2="58" y2="6" />
+          <polygon class="flag" points="58,6 70,10 58,14" />
+        </g>
+        <g style="--c: var(--amber); --cd: var(--amber-d)">
+          <polygon class="l" points="78,34 94,42 94,80 78,72" />
+          <polygon class="r" points="94,42 110,34 110,72 94,80" />
+          <polygon class="t" points="94,26 110,34 94,42 78,34" />
+        </g>
+        <g style="--c: var(--blue); --cd: var(--blue-d)">
+          <polygon class="l" points="114,50 130,58 130,80 114,72" />
+          <polygon class="r" points="130,58 146,50 146,72 130,80" />
+          <polygon class="t" points="130,42 146,50 130,58 114,50" />
+        </g>
+      </svg>
+      <div class="s-text">
+        <span class="k" data-i18n="sp.hosted">Hosted at</span>
+        <b data-i18n="sp.name">Daffodil International University</b>
+        <small data-i18n="sp.event">AI DevFest · Vibe coding</small>
+      </div>
+    </div>
+    <div class="partner">
+      <div class="coin-wrap" aria-hidden="true">
+        <div class="coin">
+          <i class="d" style="--z:-2px"></i>
+          <i class="d" style="--z:-1px"></i>
+          <i class="d" style="--z:0px"></i>
+          <i class="d" style="--z:1px"></i>
+          <i class="d" style="--z:2px"></i>
+          <i class="f" style="--z:3px">&#2547;</i>
+          <i class="f" style="--z:-3px;--r:180deg">&#2547;</i>
+        </div>
+      </div>
+      <div class="s-text">
+        <span class="k" data-i18n="sp.powered">Powered by</span>
+        <b class="upay">upay</b>
+        <small data-i18n="sp.fintech">Fintech partner</small>
+      </div>
+    </div>
+  </section>
 
   <div class="layout">
     <aside class="side">

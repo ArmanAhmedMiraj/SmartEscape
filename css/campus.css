@@ -1,0 +1,41 @@
+/* ---- 3D daffodil (header) ---- */
+.flower-wrap { width: 68px; height: 68px; perspective: 360px; flex: none; margin-bottom: 6px; filter: drop-shadow(0 10px 6px rgba(30,45,100,.4)); }
+.flower { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transform: rotateX(58deg); animation: bloom 10s linear infinite; }
+@keyframes bloom { from { transform: rotateX(58deg) rotateZ(0deg); } to { transform: rotateX(58deg) rotateZ(360deg); } }
+.petal { position: absolute; left: 50%; top: 50%; width: 22px; height: 32px; margin: -32px 0 0 -11px; transform-origin: 50% 100%;
+  transform: rotateZ(var(--a)) translateZ(var(--z));
+  background: linear-gradient(180deg, #fff3a6, #ffd21f 70%, #f2b200);
+  border-radius: 50% 50% 45% 45% / 85% 85% 20% 20%; box-shadow: inset 0 -4px 6px rgba(190,120,0,.35); }
+.ring { position: absolute; left: 50%; top: 50%; width: calc(12px + var(--i) * 2.4px); height: calc(12px + var(--i) * 2.4px); border-radius: 50%;
+  transform: translate(-50%, -50%) translateZ(calc(5px + var(--i) * 2.6px));
+  background: linear-gradient(180deg, #ffb41f, #ff8a00); border: 2px solid #d96e00; }
+.ring:last-child { background: #8a3b00; border-color: #ffb41f; }
+
+/* ---- partner strip ---- */
+.sponsors { max-width: 1360px; margin: 10px auto 0; padding: 0 32px; display: grid; grid-template-columns: 1fr auto; gap: 22px; align-items: stretch; }
+.host, .partner { background: var(--panel); border-radius: 20px; padding: 12px 20px; display: flex; align-items: center; gap: 18px; min-width: 0;
+  box-shadow: inset 0 1px 0 #fff, 0 3px 0 var(--edge1), 0 6px 0 var(--edge2), 0 22px 28px -14px rgba(40,55,110,.4); }
+.s-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.s-text b { font-family: var(--display); font-weight: 800; font-size: 20px; line-height: 1.15; letter-spacing: -.01em; }
+.s-text small { color: var(--muted); font-size: 12.5px; }
+.s-text b.upay { font-size: 32px; letter-spacing: -.03em; color: var(--blue);
+  text-shadow: 0 1px 0 var(--blue-d), 0 2px 0 var(--blue-d), 0 3px 0 var(--blue-d), 0 4px 0 var(--blue-d), 0 11px 12px rgba(36,67,201,.35); }
+@media (max-width: 980px) { .sponsors { grid-template-columns: 1fr; padding: 0 14px; gap: 16px; } .s-text b { font-size: 17px; } }
+
+/* ---- isometric campus blocks ---- */
+.campus { width: 150px; height: auto; flex: none; filter: drop-shadow(0 8px 6px rgba(30,45,100,.35)); }
+.campus .t { fill: color-mix(in srgb, var(--c) 62%, #fff); }
+.campus .l { fill: var(--c); }
+.campus .r { fill: var(--cd); }
+.campus .pole { stroke: var(--ink); stroke-width: 1.4; stroke-linecap: round; }
+.campus .flag { fill: var(--amber); }
+.campus .base { fill: rgba(40,55,110,.18); }
+@media (max-width: 560px) { .campus { width: 112px; } }
+
+/* ---- 3D coin (fintech) ---- */
+.coin-wrap { width: 64px; height: 64px; perspective: 420px; flex: none; filter: drop-shadow(0 10px 6px rgba(30,45,100,.35)); }
+.coin { position: relative; width: 48px; height: 48px; margin: 8px; transform-style: preserve-3d; animation: coinSpin 5s linear infinite; }
+.coin i { position: absolute; inset: 0; border-radius: 50%; transform: translateZ(var(--z)) rotateY(var(--r, 0deg)); display: grid; place-items: center; font-style: normal; }
+.coin .d { background: #c27a05; }
+.coin .f { background: radial-gradient(circle at 35% 30%, #ffe08a, #ffb020 55%, #e09600); border: 3px solid #c27a05; font-family: var(--display); font-weight: 800; font-size: 24px; color: #7a4a00; backface-visibility: hidden; }
+@keyframes coinSpin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }

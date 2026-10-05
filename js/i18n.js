@@ -4,6 +4,12 @@
 
   var DICT = {
     en: {
+      'sp.label': 'Event partners',
+      'sp.hosted': 'Hosted at',
+      'sp.name': 'Daffodil International University',
+      'sp.event': 'AI DevFest · Vibe coding',
+      'sp.powered': 'Powered by',
+      'sp.fintech': 'Fintech partner',
       'app.title': 'Smart Escape',
       'app.subtitle': 'Interactive evacuation route simulator',
       'lang.label': 'Language',
@@ -96,6 +102,12 @@
       'err.INIT_WRONG_CATEGORY': 'initial_state.{field} contains "{id}", which is the wrong kind of item.'
     },
     bn: {
+      'sp.label': 'ইভেন্ট পার্টনার',
+      'sp.hosted': 'আয়োজনস্থল',
+      'sp.name': 'ড্যাফোডিল ইন্টারন্যাশনাল ইউনিভার্সিটি',
+      'sp.event': 'AI DevFest · ভাইব কোডিং',
+      'sp.powered': 'পাওয়ার্ড বাই',
+      'sp.fintech': 'ফিনটেক পার্টনার',
       'app.title': 'স্মার্ট এস্কেপ',
       'app.subtitle': 'ইন্টারঅ্যাকটিভ সরিয়ে নেওয়ার রুট সিমুলেটর',
       'lang.label': 'ভাষা',

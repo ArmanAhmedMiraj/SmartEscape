@@ -50,6 +50,7 @@ Self-tests: open `tests.html` in Chrome. It runs the official sample checks plus
 
 - Keyboard and screen-reader friendly controls.
 - Self-test page covering the sample checks and edge cases.
+- 3D interface: tilted floor plan, raised blocks, keycap buttons, a 3D high-contrast mode, a rotating daffodil, isometric campus blocks and a partner banner (Daffodil International University, powered by upay). These are original drawings, not official logos.
 - Route walkthrough (a dot travels along the found route).
 - High-contrast mode (saved in the browser).
 
