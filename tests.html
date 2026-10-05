@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Smart Escape - self-tests</title>
+<style>
+  body { font-family: system-ui, "Segoe UI", sans-serif; max-width: 860px; margin: 2rem auto; padding: 0 1rem; background: #0f172a; color: #e2e8f0; }
+  #summary { font-size: 1.3rem; font-weight: 700; margin: .5rem 0 1.25rem; }
+  .t { display: flex; gap: .75rem; padding: .5rem .75rem; border-radius: 8px; margin: .35rem 0; background: #1e293b; }
+  .t b { min-width: 3.5rem; }
+  .pass b { color: #4ade80; }
+  .fail b { color: #f87171; }
+  .fail { outline: 1px solid #f87171; }
+  small { color: #94a3b8; display: block; }
+</style>
+</head>
+<body>
+<h1>Smart Escape - self-tests</h1>
+<div id="summary">Running...</div>
+<div id="out"></div>
+
+<script src="js/validate.js"></script>
+<script src="js/router.js"></script>
+<script src="js/sample.js"></script>
+<script>
+(function () {
+  var SE = window.SmartEscape;
+  var results = [];
+
+  function test(name, fn) {
+    try {
+      var r = fn();
+      results.push({ name: name, ok: r === true, detail: r === true ? '' : String(r) });
+    } catch (e) {
+      results.push({ name: name, ok: false, detail: 'Exception: ' + e.message });
+    }
+  }
+  function same(a, b) { return JSON.stringify(a) === JSON.stringify(b); }
+  function sample() { return JSON.parse(JSON.stringify(SE.SAMPLE)); }
+  function load(data) {
+    var v = SE.validateBuilding(data);
+    if (!v.ok) throw new Error('invalid: ' + JSON.stringify(v.errors));
+    return v.graph;
+  }
+  function fresh() { var g = load(sample()); return { g: g, h: SE.hazardsFromInitial(g) }; }
+  function expectRoute(r, path, cost) {
+    if (r.status !== 'OK') return 'status ' + r.status;
+    if (!same(r.path, path)) return 'path ' + r.path.join('-');
+    if (r.cost !== cost) return 'cost ' + r.cost;
+    return true;
+  }
+  function mk(ns, es, init) {
+    return {
+      building: 'T',
+      nodes: ns.map(function (n, i) { return { id: n[0], label: n[0], type: n[1], x: i * 50, y: 0 }; }),
+      edges: es.map(function (e, i) { return { id: 'e' + i, from: e[0], to: e[1], cost: e[2] }; }),
+      initial_state: Object.assign({ blocked_nodes: [], blocked_edges: [], closed_exits: [] }, init || {})
+    };
+  }
+  function run(data, start, tweak) {
+    var g = load(data), h = SE.hazardsFromInitial(g);
+    if (tweak) tweak(h);
+    return SE.computeRoute(g, h, start);
+  }
+  function hasCode(data, code) {
+    var v = SE.validateBuilding(data);
+    return !v.ok && v.errors.some(function (e) { return e.code === code; }) ? true : 'errors: ' + JSON.stringify(v.errors.map(function (e) { return e.code; }));
+  }
+
+  // ===== Section 4.1 sample checks =====
+  test('4.1 Baseline: select R1', function () {
+    var x = fresh(); return expectRoute(SE.computeRoute(x.g, x.h, 'R1'), ['R1', 'C1', 'C2', 'E1'], 7);
+  });
+  test('4.1 Block C2: R1 reroutes via C3, C4 to E2', function () {
+    var x = fresh(); x.h.blockedNodes.add('C2');
+    return expectRoute(SE.computeRoute(x.g, x.h, 'R1'), ['R1', 'C1', 'C3', 'C4', 'E2'], 11);
+  });
+  test('4.1 Close E1 and E2: No route available', function () {
+    var x = fresh(); x.h.closedExits.add('E1'); x.h.closedExits.add('E2');
+    var r = SE.computeRoute(x.g, x.h, 'R1'); return r.status === 'NO_ROUTE' ? true : r.status;
+  });
+  test('4.1 Different start: R2', function () {
+    var x = fresh(); return expectRoute(SE.computeRoute(x.g, x.h, 'R2'), ['R2', 'C3', 'C4', 'E2'], 7);
+  });
+  test('4.1 Blocked start: Starting location blocked', function () {
+    var x = fresh(); x.h.blockedNodes.add('R1');
+    var r = SE.computeRoute(x.g, x.h, 'R1'); return r.status === 'START_BLOCKED' ? true : r.status;
+  });
+
+  // ===== Hazard behaviour =====
+  test('Blocked corridor L02 only removes that connection', function () {
+    var x = fresh(); x.h.blockedEdges.add('L02');
+    return expectRoute(SE.computeRoute(x.g, x.h, 'R1'), ['R1', 'C1', 'C3', 'C4', 'E2'], 11);
+  });
+  test('Unblocking C2 restores the baseline route', function () {
+    var x = fresh(); x.h.blockedNodes.add('C2'); x.h.blockedNodes.delete('C2');
+    return expectRoute(SE.computeRoute(x.g, x.h, 'R1'), ['R1', 'C1', 'C2', 'E1'], 7);
+  });
+  test('An exit cannot be a start', function () {
+    var x = fresh(); var r = SE.computeRoute(x.g, x.h, 'E1'); return r.status === 'INVALID_START' ? true : r.status;
+  });
+  test('No start selected', function () {
+    var x = fresh(); var r = SE.computeRoute(x.g, x.h, null); return r.status === 'NO_START' ? true : r.status;
+  });
+  test('Closed exit is not usable as an intermediate node', function () {
+    var d = mk([['S', 'room'], ['E1', 'exit'], ['E2', 'exit']], [['S', 'E1', 1], ['E1', 'E2', 1]], { closed_exits: ['E1'] });
+    var r = run(d, 'S'); return r.status === 'NO_ROUTE' ? true : r.status;
+  });
+
+  // ===== Tie-breaks and cost rules =====
+  test('Equal cost: smallest exit ID wins', function () {
+    var d = mk([['S', 'room'], ['B', 'exit'], ['A', 'exit']], [['S', 'B', 3], ['S', 'A', 3]]);
+    return expectRoute(run(d, 'S'), ['S', 'A'], 3);
+  });
+  test('Equal path: smallest node-ID sequence wins (C10 < C2)', function () {
+    var d = mk([['S', 'room'], ['C2', 'junction'], ['C10', 'junction'], ['E', 'exit']],
+      [['S', 'C2', 1], ['S', 'C10', 1], ['C2', 'E', 1], ['C10', 'E', 1]]);
+    return expectRoute(run(d, 'S'), ['S', 'C10', 'E'], 2);
+  });
+  test('Cost is the sum of weights, not the number of corridors', function () {
+    var d = mk([['S', 'room'], ['M', 'junction'], ['E', 'exit']], [['S', 'E', 10], ['S', 'M', 2], ['M', 'E', 2]]);
+    return expectRoute(run(d, 'S'), ['S', 'M', 'E'], 4);
+  });
+  test('Disconnected start: No route available', function () {
+    var d = mk([['S', 'room'], ['J', 'junction'], ['E', 'exit']], [['J', 'E', 1]]);
+    var r = run(d, 'S'); return r.status === 'NO_ROUTE' ? true : r.status;
+  });
+  test('IDs like __proto__ / constructor do not break anything', function () {
+    var d = mk([['__proto__', 'room'], ['constructor', 'exit']], [['__proto__', 'constructor', 5]]);
+    return expectRoute(run(d, '__proto__'), ['__proto__', 'constructor'], 5);
+  });
+
+  // ===== Validation =====
+  test('Sample file is valid', function () { var v = SE.validateBuilding(sample()); return v.ok ? true : JSON.stringify(v.errors); });
+  test('Reject: top level is an array', function () { return hasCode([], 'NOT_OBJECT'); });
+  test('Reject: missing initial_state', function () { var d = sample(); delete d.initial_state; return hasCode(d, 'INIT_MISSING'); });
+  test('Reject: reversed duplicate corridor pair', function () {
+    var d = sample(); d.edges.push({ id: 'L99', from: 'C1', to: 'R1', cost: 1 }); return hasCode(d, 'EDGE_DUP_PAIR');
+  });
+  test('Reject: self-loop', function () {
+    var d = sample(); d.edges.push({ id: 'L99', from: 'R1', to: 'R1', cost: 1 }); return hasCode(d, 'EDGE_SELF_LOOP');
+  });
+  test('Reject: cost given as a string', function () { var d = sample(); d.edges[0].cost = '3'; return hasCode(d, 'EDGE_COST'); });
+  test('Reject: cost 0', function () { var d = sample(); d.edges[0].cost = 0; return hasCode(d, 'EDGE_COST'); });
+  test('Reject: cost 2.5', function () { var d = sample(); d.edges[0].cost = 2.5; return hasCode(d, 'EDGE_COST'); });
+  test('Reject: duplicate node ID', function () {
+    var d = sample(); d.nodes.push({ id: 'R1', label: 'x', type: 'room', x: 0, y: 0 }); return hasCode(d, 'NODE_DUP_ID');
+  });
+  test('Reject: no exit in file', function () {
+    return hasCode(mk([['A', 'room'], ['B', 'junction']], [['A', 'B', 1]]), 'NO_EXIT');
+  });
+  test('Reject: blocked_nodes contains an exit', function () {
+    var d = sample(); d.initial_state.blocked_nodes = ['E1']; return hasCode(d, 'INIT_WRONG_CATEGORY');
+  });
+  test('Reject: closed_exits contains a junction', function () {
+    var d = sample(); d.initial_state.closed_exits = ['C1']; return hasCode(d, 'INIT_WRONG_CATEGORY');
+  });
+  test('Reject: IDs are case-sensitive (c2 is unknown)', function () {
+    var d = sample(); d.initial_state.blocked_nodes = ['c2']; return hasCode(d, 'INIT_UNKNOWN_ID');
+  });
+
+  // ===== Render =====
+  var passed = results.filter(function (r) { return r.ok; }).length;
+  var sum = document.getElementById('summary');
+  sum.textContent = passed + ' / ' + results.length + ' passed' + (passed === results.length ? '  - ALL GREEN' : '  - FIX THE RED ONES');
+  sum.style.color = passed === results.length ? '#4ade80' : '#f87171';
+  document.getElementById('out').innerHTML = results.map(function (r) {
+    return '<div class="t ' + (r.ok ? 'pass' : 'fail') + '"><b>' + (r.ok ? 'PASS' : 'FAIL') + '</b><div>' +
+      r.name + (r.ok ? '' : '<small>' + r.detail.replace(/</g, '&lt;') + '</small>') + '</div></div>';
+  }).join('');
+})();
+</script>
+</body>
+</html>
