@@ -50,6 +50,8 @@ Self-tests: open `tests.html` in Chrome. It runs the official sample checks plus
 
 - Keyboard and screen-reader friendly controls.
 - Self-test page covering the sample checks and edge cases.
+- Click menu: click any room, junction, corridor or exit on the 2D or 3D map to set it as the start, block or unblock it, or close or reopen an exit, right where you clicked. The Set start and Toggle hazards modes remain available.
+- Real 3D view (Three.js): walled rooms with doorways, junction pads, exit doors with signs, flames on blocked places, barriers on blocked corridors, a glowing route with a walking figure, orbit/zoom camera, shadows, and a 3D high-contrast palette. A 2D/3D toggle is provided and the app falls back to 2D if WebGL is unavailable.
 - 3D interface: tilted floor plan, raised blocks, keycap buttons, a 3D high-contrast mode, a rotating daffodil, isometric campus blocks and a partner banner (Daffodil International University, powered by upay). These are original drawings, not official logos.
 - Route walkthrough (a dot travels along the found route).
 - High-contrast mode (saved in the browser).
@@ -65,6 +67,7 @@ Self-tests: open `tests.html` in Chrome. It runs the official sample checks plus
 ## Known issues
 
 - Tested only in the latest Chrome.
+- The 3D view needs WebGL; without it the 2D map is used automatically.
 - Very dense or overlapping coordinates may make labels hard to read.
 - No PNG export or progress saving yet.
 
@@ -77,3 +80,7 @@ Claude (Anthropic) for planning, writing and reviewing the code. Every commit me
 ## License
 
 MIT - see `LICENSE`.
+
+## Third-party code
+
+- Three.js r128 (MIT licence), bundled at `js/vendor/three.min.js` so the app works offline.

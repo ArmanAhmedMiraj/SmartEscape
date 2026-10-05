@@ -6,7 +6,7 @@
 
   // The single source of truth. Every action changes S, then calls render().
   var S = {
-    graph: null, hazards: null, start: null, mode: 'start', lang: 'en',
+    graph: null, hazards: null, start: null, mode: 'menu', lang: 'en',
     source: '', route: { status: 'EMPTY' }, importErrors: []
   };
 
@@ -43,7 +43,7 @@
     S.graph = graph;
     S.hazards = SE.hazardsFromInitial(graph);
     S.start = null;
-    S.mode = 'start';
+    S.mode = 'menu';
     S.source = source;
     S.importErrors = [];
     SE.ui.buildMap(graph, { node: onNodeClick, edge: onEdgeClick });
@@ -87,7 +87,7 @@
     render();
   }
 
-  // ---------- wiring ----------
+  SE.actions = { setStart: setStart, toggleNode: toggleNode, toggleEdge: toggleEdge }; // ---------- wiring ----------
   $('drop').addEventListener('click', function () { $('file').click(); });
   $('file').addEventListener('change', function (e) {
     var f = e.target.files && e.target.files[0];
