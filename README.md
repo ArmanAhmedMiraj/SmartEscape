@@ -50,6 +50,8 @@ Self-tests: open `tests.html` in Chrome. It runs the official sample checks plus
 
 - Keyboard and screen-reader friendly controls.
 - Self-test page covering the sample checks and edge cases.
+- Route walkthrough (a dot travels along the found route).
+- High-contrast mode (saved in the browser).
 
 ## Assumptions
 
@@ -63,7 +65,7 @@ Self-tests: open `tests.html` in Chrome. It runs the official sample checks plus
 
 - Tested only in the latest Chrome.
 - Very dense or overlapping coordinates may make labels hard to read.
-- No PNG export, route walkthrough or progress saving yet.
+- No PNG export or progress saving yet.
 
 ## AI tools used
 

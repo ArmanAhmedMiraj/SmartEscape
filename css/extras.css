@@ -1,0 +1,16 @@
+.tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.walk-btn { margin-top: 12px; }
+.walker { fill: #fff; stroke: var(--route); stroke-width: calc(3px * var(--u)); filter: drop-shadow(0 0 6px rgba(56,189,248,.9)); pointer-events: none; }
+
+body.hc { --bg: #000; --card: #000; --card2: #000; --line: #fff; --text: #fff; --muted: #e6e6e6;
+  --route: #ffe600; --accent: #ffe600; --accent2: #ffe600; --ok: #39ff88; --bad: #ff6b6b; --warn: #ffd400;
+  background-image: none; }
+body.hc .card { border-color: #fff; box-shadow: none; }
+body.hc .map { background: #000; border-color: #fff; }
+body.hc .edge-line { stroke: #fff; }
+body.hc .pill-bg { fill: #000; stroke: #fff; }
+body.hc .edge-cost, body.hc .node-label { fill: #fff; }
+body.hc .route-glow { stroke: rgba(255,230,0,.35); }
+body.hc .seg button[aria-pressed="true"] { background: #ffe600; color: #000; box-shadow: none; }
+body.hc .btn, body.hc select { border-color: #fff; }
+body.hc select { background: #000; }
